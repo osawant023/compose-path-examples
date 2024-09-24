@@ -109,6 +109,7 @@ fun DocumentScannerApp() {
         contract = ActivityResultContracts.StartIntentSenderForResult()) {
         if (it.resultCode == RESULT_OK) {
             //Show images
+
             val result =  GmsDocumentScanningResult.fromActivityResultIntent(it.data)
             imageUris = result?.pages?.map { it.imageUri } ?: emptyList()
 
