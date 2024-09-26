@@ -54,28 +54,22 @@ import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions.RESULT_
 import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions.SCANNER_MODE_FULL
 import com.google.mlkit.vision.documentscanner.GmsDocumentScanning
 import com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult
+import com.jetpackcompose.compose_path_android.screens.NotesApp
 import com.jetpackcompose.compose_path_android.ui.theme.ComposePathTheme
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 
 class MainActivity : ComponentActivity() {
+    val localActivity = staticCompositionLocalOf<ComponentActivity> { this }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         setContent {
             ComposePathTheme(dynamicColor = false) {
-                val localActivity = staticCompositionLocalOf<ComponentActivity> { noLocalProvidedFor("LocalActivity") }
-                CompositionLocalProvider(value = localActivity provides this) {
-                    DocumentScannerApp()
-                }
+                NotesApp()
             }
         }
-    }
-
-    private fun noLocalProvidedFor(localActivity: String): Nothing {
-        error("CompositionLocal $localActivity not present")
     }
 }
 
@@ -84,104 +78,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     ComposePathTheme(dynamicColor = false) {
-        DocumentScannerApp()
+        NotesApp()
     }
 }
 
-@Composable
-fun DocumentScannerApp() {
-    val activity = LocalContext.current as Activity
-    val snackbarHostState = remember { SnackbarHostState() }
-    val options = remember {
-        GmsDocumentScannerOptions.Builder()
-            .setScannerMode(SCANNER_MODE_FULL)
-            .setGalleryImportAllowed(true)
-            .setPageLimit(5)
-            .setResultFormats(RESULT_FORMAT_PDF, RESULT_FORMAT_JPEG)
-            .build()
-    }
-    val scanner = remember { GmsDocumentScanning.getClient(options) }
 
-    var imageUris by remember {
-        mutableStateOf<List<Uri>>(emptyList())
-    }
-    val scannerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartIntentSenderForResult()) {
-        if (it.resultCode == RESULT_OK) {
-            //Show images
-
-            val result =  GmsDocumentScanningResult.fromActivityResultIntent(it.data)
-            imageUris = result?.pages?.map { it.imageUri } ?: emptyList()
-
-            //Save PDF
-            result?.pdf?.let { pdf ->
-                val fos = FileOutputStream(File(activity.filesDir, "scan_document.pdf"))
-                activity.contentResolver.openInputStream(pdf.uri)?.use { inputStream ->
-                    inputStream.copyTo(fos)
-                }
-            }
-        }
-    }
-
-
-    val cs = rememberCoroutineScope()
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState )
-        },
-        modifier = Modifier.fillMaxSize()) { padding ->
-        Surface {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(modifier = Modifier
-                    .fillMaxSize()
-                    .scrollable(rememberScrollState(), orientation = Orientation.Horizontal)) {
-                    imageUris.forEach { uri ->
-                        AsyncImage(
-                            model = uri,
-                            contentDescription = null,
-                            contentScale = ContentScale.FillWidth,
-                            modifier = Modifier
-                                .fillMaxSize()
-                        )
-                    }
-                }
-
-                Text(
-                    modifier = Modifier
-                        .padding(15.dp)
-                        .width(IntrinsicSize.Max)
-                        .height(IntrinsicSize.Max)
-                        .align(Alignment.BottomEnd)
-                        .background(MaterialTheme.colorScheme.secondary, shape = RoundedCornerShape(10.dp))
-                        .clickable(role = Role.Button) {
-                            scanner
-                                .getStartScanIntent(activity)
-                                .addOnSuccessListener { intent ->
-                                    scannerLauncher.launch(
-                                        IntentSenderRequest
-                                            .Builder(intent)
-                                            .build()
-                                    )
-                                }
-                                .addOnFailureListener {
-                                    cs.launch { snackbarHostState.showSnackbar(it.message ?: "") }
-                                }
-                        }
-                        .padding(10.dp),
-                    text = "Scan Document +",
-                    textAlign = TextAlign.Center,
-                    style = TextStyle(textAlign = TextAlign.Center),
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-            }
-        }
-    }
-}
 
 
