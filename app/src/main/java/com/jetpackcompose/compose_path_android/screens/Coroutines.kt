@@ -8,6 +8,7 @@ import kotlinx.coroutines.withContext
 
 fun main(){
     fetchUserData()
+
 }
 
 fun fetchUserData() {
