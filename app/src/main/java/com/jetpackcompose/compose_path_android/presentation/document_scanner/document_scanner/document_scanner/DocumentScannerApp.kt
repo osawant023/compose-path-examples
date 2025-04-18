@@ -1,4 +1,4 @@
-package com.jetpackcompose.compose_path_android.screens
+package com.jetpackcompose.compose_path_android.presentation.document_scanner
 
 import android.app.Activity
 import android.app.Activity.RESULT_OK
@@ -54,7 +54,7 @@ import java.io.FileOutputStream
 @Composable
 fun DocumentScannerApp() {
     val activity = LocalContext.current as Activity
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
     val options = remember {
         GmsDocumentScannerOptions.Builder()
             .setScannerMode(SCANNER_MODE_FULL)
@@ -85,7 +85,7 @@ fun DocumentScannerApp() {
     val cs = rememberCoroutineScope()
     Scaffold(
         snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState )
+            SnackbarHost(hostState = snackBarHostState )
         },
         modifier = Modifier.fillMaxSize()) { padding ->
         Surface {
@@ -127,7 +127,7 @@ fun DocumentScannerApp() {
                                     )
                                 }
                                 .addOnFailureListener {
-                                    cs.launch { snackbarHostState.showSnackbar(it.message ?: "") }
+                                    cs.launch { snackBarHostState.showSnackbar(it.message ?: "") }
                                 }
                         }
                         .padding(10.dp),

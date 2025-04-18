@@ -1,5 +1,6 @@
-package com.jetpackcompose.compose_path_android.screens
+package com.jetpackcompose.compose_path_android.presentation.notes_list.notes_list.notes_list
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -32,14 +33,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.jetpackcompose.compose_path_android.util.ShimmerSkeleton
 import kotlinx.coroutines.delay
 
 data class Note(val title: String, val content: String)
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun NotesApp() {
-    var notes by remember { mutableStateOf(listOf<Note>(Note("Note 1", "Content 1"), Note("Note 2", "Content 2"))) }
+    var notes by remember {
+        mutableStateOf(
+            listOf(
+                Note("Note 1", "Content 1"),
+                Note("Note 2", "Content 2")
+            )
+        )
+    }
     var showDialog by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
 
@@ -49,12 +58,10 @@ fun NotesApp() {
         isLoading = false
     }
 
+    
+
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Notes App") }
-            )
-        },
+        modifier = Modifier.fillMaxSize(),
         floatingActionButton = {
             FloatingActionButton(onClick = { showDialog = true }) {
                 Icon(Icons.Default.Add, contentDescription = "Add Note")
@@ -71,8 +78,13 @@ fun NotesApp() {
                 }
             } else {
                 LazyColumn {
+                    stickyHeader {
+                        TopAppBar(
+                            title = { Text("Notes App") }
+                        )
+                    }
                     items(notes) { note ->
-                        NoteItem(note , isLoading)
+                        NoteItem(note, isLoading)
                     }
                 }
             }
@@ -99,16 +111,17 @@ fun NoteItem(note: Note, isLoading: Boolean) {
             .padding(8.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        ShimmerSkeleton(isLoading = isLoading,content = {
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)) {
+        ShimmerSkeleton(isLoading = isLoading, content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
                 Text(text = note.title, style = MaterialTheme.typography.headlineLarge)
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = note.content, style = MaterialTheme.typography.titleLarge)
             }
         })
-
     }
 }
 

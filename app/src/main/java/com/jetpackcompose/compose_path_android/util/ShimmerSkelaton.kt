@@ -1,4 +1,4 @@
-package com.jetpackcompose.compose_path_android.screens
+package com.jetpackcompose.compose_path_android.util
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
@@ -75,7 +75,7 @@ fun ShimmerSkeleton(
     modifier: Modifier = Modifier,
     shape: Shape = RectangleShape,
     content: @Composable () -> Unit,
-    isLoading : Boolean = true ,
+    isLoading : Boolean = true,
 ) {
     val shimmerBrush = rememberShimmerBrush()
     Box(modifier = modifier) {
