@@ -1,5 +1,6 @@
 package com.jetpackcompose.compose_path_android.presentation.document_scanner
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.net.Uri
@@ -51,6 +52,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 
+@SuppressLint("ContextCastToActivity")
 @Composable
 fun DocumentScannerApp() {
     val activity = LocalContext.current as Activity

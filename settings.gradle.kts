@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Compose-path-android"
 include(":app")
+include(":core")
