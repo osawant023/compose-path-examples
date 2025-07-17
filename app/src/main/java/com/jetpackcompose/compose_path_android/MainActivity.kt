@@ -37,7 +37,6 @@ class MainActivity : ComponentActivity() {
                     LocalNavController provides navController,
                     LocalPermissionManager provides permissionManager
                 ) {
-
                     Scaffold { padding ->
                         NavHost(
                             modifier = Modifier.padding(padding),
