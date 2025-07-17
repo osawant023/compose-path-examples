@@ -28,10 +28,20 @@ jobs:
       - name: Copy APK to root
         run: |
             mkdir -p apk
-            cp app/build/outputs/apk/debug/app-debug.apk apk/debug.apk
+            cp app/build/outputs/apk/debug/app-debug.apk ./apk/debug.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
          name: debug-apk
          path: apk/debug.apk
+
+      - name: Commit APK to repo
+        run: |
+          git config --global user.name "osawant023"
+          git config --global user.email "osawant023@gmail.com"
+          git add apk/debug.apk
+          git commit -m "Add debug APK from CI"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
