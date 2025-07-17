@@ -15,5 +15,8 @@ sealed interface Route {
     @Serializable
     data object SharedElement : Route
 
+    @Serializable
+    data object Encryption : Route
+
 
 }

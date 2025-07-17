@@ -18,6 +18,7 @@ val arrayScreenList = arrayListOf(
     Screen("Notes List", Route.NotesList),
     Screen("Document Scanner", Route.DocumentScanner),
     Screen("Scene Animation", Route.SharedElement),
+    Screen("Encryption", Route.Encryption),
 )
 
 @Composable

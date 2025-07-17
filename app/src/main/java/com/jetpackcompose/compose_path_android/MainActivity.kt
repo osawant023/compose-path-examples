@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.jetpackcompose.compose_path_android.core.navigation.Route
 import com.jetpackcompose.compose_path_android.presentation.document_scanner.DocumentScannerApp
+import com.jetpackcompose.compose_path_android.presentation.encryption.UiScreenEncryption
 import com.jetpackcompose.compose_path_android.presentation.scene_animation.SceneAnimation
 import com.jetpackcompose.compose_path_android.presentation.start.ComposePathListScreen
 import com.jetpackcompose.compose_path_android.ui.theme.ComposePathTheme
@@ -47,12 +48,19 @@ class MainActivity : ComponentActivity() {
                             composable<Route.DocumentScanner> { DocumentScannerApp() }
 
                             composable<Route.SharedElement> { SceneAnimation() }
+
+                            composable<Route.Encryption> { UiScreenEncryption() }
                         }
                     }
                 }
             }
         }
     }
+}
+
+
+fun main(){
+
 }
 
 
