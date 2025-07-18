@@ -16,6 +16,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Enable Gradle caching
+        uses: gradle/actions/setup-gradle@v3
+
       - name: Grant execute permission to gradlew
         run: chmod +x ./gradlew
 
