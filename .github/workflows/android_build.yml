@@ -48,3 +48,23 @@ jobs:
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Send APK via Email to team
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_APP_PASSWORD }}
+          subject: "📦 New Android APK Build"
+          body: |
+            Hello Team,
+
+            The latest debug APK is attached.
+            Please review and test.
+
+            – CI/CD System
+          to: ${{ secrets.TO_EMAIL }}
+          from: ${{ secrets.EMAIL_USERNAME }}
+          attachments: apk/debug.apk
+          secure: true
