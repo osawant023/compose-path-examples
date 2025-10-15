@@ -10,6 +10,7 @@ import javax.crypto.Cipher
 
 class EncryptionManager(context: Context) {
 
+
     val rsaKey by lazy { generateRSAKeyPair() }
 
     private fun generateRSAKeyPair(): KeyPair {
